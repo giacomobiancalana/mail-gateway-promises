@@ -5,7 +5,7 @@ import path = require('path');
 dotenv.config();
 
 const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET =process.env.CLIENT_SECRET;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const TENANT_ID = process.env.TENANT_ID;
 
 const imapFlowOpt: ImapFlowOptions = {
