@@ -20,6 +20,7 @@ const client: ImapFlow = new ImapFlow(imapFlowOpt);
 
 /** Funzione principale */
 const main = async () => {
+  //TODO: da dividere in più funzioni
   const acc = await getObjWithAccessTokenData();
   if (!acc) {
     throw new Error('Access token nullo.');
@@ -85,4 +86,5 @@ const main = async () => {
 };
 
 // Chiamata alla funzione principale
+//TODO: prima o poi ci va messo NestJS con i Cron Jobs
 main().catch(err => console.error(err));
