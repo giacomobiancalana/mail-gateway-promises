@@ -57,8 +57,7 @@ const main = async () => {
       
       // list subjects for all messages
       // uid value is always included in FETCH response, envelope strings are in unicode.
-      const yy = client.fetch('1:*', { envelope: true });  //TODO: provalo
-      //TODO: client.fetch:  perchè non è una funzione async??
+      const yy = client.fetch('1:*', { envelope: true });  //async iterator, da capire meglio. vedi sotto il "for await"
       //TODO: Da capire meglio
       for await (let message of client.fetch('1:*', { envelope: true })) {
         //TODO: perché ad una certa finisce? non dovrebbe scandagliare TUTTI i messaggi che ho nella casella mail?
