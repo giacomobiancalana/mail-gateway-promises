@@ -29,7 +29,12 @@ const main = async () => {
 
   // Wait until client connects and authorizes
   console.log("MI PREPARO ALLA CONNESSIONE!!");
-  await client.connect();  //Perché tutti questi log??
+  try {
+    await client.connect();
+  } catch (error) {
+    console.error("Niente connessione, errore:\n", error);
+    return;
+  }
   console.log("CONNESSO!!")
 
   // Select and lock a mailbox. Throws if mailbox does not exist
