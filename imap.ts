@@ -1,4 +1,4 @@
-import { ImapFlow, ImapFlowOptions } from 'imapflow';
+import { ImapFlow, ImapFlowOptions, MailboxLockObject } from 'imapflow';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import path = require('path');
@@ -42,7 +42,7 @@ async function getObjWithAccessTokenData() {
   };
 }
 
-const client = new ImapFlow(imapFlowOpt);
+const client: ImapFlow = new ImapFlow(imapFlowOpt);
 
 const main = async () => {
   const acc = await getObjWithAccessTokenData();
@@ -58,18 +58,32 @@ const main = async () => {
   console.log("CONNESSO!!")
 
   // Select and lock a mailbox. Throws if mailbox does not exist
-  let lock = await client.getMailboxLock('INBOX');
+  let lock: MailboxLockObject = await client.getMailboxLock('INBOX');
   try {
       // fetch latest message source
       // client.mailbox includes information about currently selected mailbox
       // "exists" value is also the largest sequence number available in the mailbox
       if (typeof client.mailbox !== 'boolean') {
+        
+        console.log("client.mailbox.exists:", client.mailbox.exists);
         let message = await client.fetchOne(`${client.mailbox.exists}`, { source: true });
         console.log("message.source:", message.source.toString());
+
+        const messagesNumbers = await client.search({seen: true, to: 'dev.service+dev@eagleprojects.it'});  // , {uid: true}
+        console.log("messages:\n", messagesNumbers);
+        const messagesNumbersUids = await client.search({seen: true, to: 'dev.service+dev@eagleprojects.it'});  // , {uid: true}
+        console.log("messages UIDS:\n", messagesNumbersUids);
+
+        const messageNumb = messagesNumbers[0];
+        console.log("messageNumb:", messageNumb);
+        const mess = await client.fetchOne(`${messageNumb}`, {source: true});
+        console.log("mess da fetchare:\n", mess.source.toString());
         
         // list subjects for all messages
         // uid value is always included in FETCH response, envelope strings are in unicode.
-        const yy = client.fetch('1:*', { envelope: true });  //TODO: perchè non è una funzione async??
+        const yy = client.fetch('1:*', { envelope: true });  //TODO: provalo
+        //TODO: perchè non è una funzione async??
+        //TODO: Da capire meglio
         for await (let message of client.fetch('1:*', { envelope: true })) {
           console.log("message uid e altro:\n", `${message.uid}: ${message.envelope.subject}`);
         }
