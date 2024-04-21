@@ -71,20 +71,22 @@ const main = async () => {
 
         const messagesNumbers = await client.search({seen: true, to: 'dev.service+dev@eagleprojects.it'});  // , {uid: true}
         console.log("messages:\n", messagesNumbers);
-        const messagesNumbersUids = await client.search({seen: true, to: 'dev.service+dev@eagleprojects.it'});  // , {uid: true}
+        const messagesNumbersUids = await client.search({seen: true, to: 'dev.service+dev@eagleprojects.it'}, {uid: true});
         console.log("messages UIDS:\n", messagesNumbersUids);
 
         const messageNumb = messagesNumbers[0];
         console.log("messageNumb:", messageNumb);
         const mess = await client.fetchOne(`${messageNumb}`, {source: true});
+        //TODO: forse con uid: true va a cercare con l'uid invece che con il sequenceNumber (ecco forse perché non funzionava)
         console.log("mess da fetchare:\n", mess.source.toString());
         
         // list subjects for all messages
         // uid value is always included in FETCH response, envelope strings are in unicode.
         const yy = client.fetch('1:*', { envelope: true });  //TODO: provalo
-        //TODO: perchè non è una funzione async??
+        //TODO: client.fetch:  perchè non è una funzione async??
         //TODO: Da capire meglio
         for await (let message of client.fetch('1:*', { envelope: true })) {
+          //TODO: perché ad una certa finisce? non dovrebbe scandagliare TUTTI i messaggi che ho nella casella mail?
           console.log("message uid e altro:\n", `${message.uid}: ${message.envelope.subject}`);
         }
       }
