@@ -22,6 +22,7 @@ const client: ImapFlow = new ImapFlow(imapFlowOpt);
 const main = async () => {
   //TODO: da dividere in più funzioni
   const acc = await getObjWithAccessTokenData();
+  //TODO: se metto il cron job, access token lo posso mettere come variabile di classe, e lo riprendo ogni volta fino alla scadenza (un'ora)? Come ragiono?
   if (!acc) {
     throw new Error('Access token nullo.');
   };
@@ -87,4 +88,9 @@ const main = async () => {
 
 // Chiamata alla funzione principale
 //TODO: prima o poi ci va messo NestJS con i Cron Jobs
-main().catch(err => console.error(err));
+
+try {
+  main();
+} catch (error) {
+  console.error(error);
+}
