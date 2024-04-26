@@ -58,7 +58,7 @@ async function main() {
       to: 'dev.service+dev@eagleprojects.it',
       from: 'gbiancalana@eagleprojects.it',
       or: [{ from: 'biancalanagiacomo@outlook.it', to: 'dev.service+dev@eagleprojects.it', seen: true, since: '2024-04-01' }, {}]
-    };
+    };  //TODO: da capire meglio l'or sul SearchObject
     const messagesNumbers = await client.search(searchObj);
     console.log("messages seq numbers:\n", messagesNumbers);
     // Uid search
