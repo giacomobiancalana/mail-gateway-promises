@@ -53,25 +53,25 @@ async function main() {
     // SEARCHING
     // Sequence numbers search
     const searchObj: SearchObject = {
-      seen: true,
+      seen: false,
       since: '2024-04-01',
-      to: 'dev.service+dev@eagleprojects.it',
-      from: 'gbiancalana@eagleprojects.it',
-      // or: [
-      //   {
-      //     // from: 'gbiancalana@eagleprojects.it',
-      //     since: '2024-04-01',
-      //     to: 'dev.service+dev@eagleprojects.it',
-      //   },
-      //   {
-      //     from: 'biancalanagiacomo@outlook.it',
-      //     to: 'dev.service+prova@eagleprojects.it',
-      //   }
-      // ]
-    };  //TODO: da capire meglio l'or sul SearchObject, perché per ora non funziona o non sono riuscito a capire come funziona
-    const messagesNumbers = await client.search(searchObj);
+      or: [
+        {
+          to: 'dev.service+test@eagleprojects.it',
+        },
+        {
+          to: 'dev.service+prova@eagleprojects.it',
+        }
+      ]
+    };
+    //TODO: da capire meglio l'or sul SearchObject, perché per ora non funziona o non sono riuscito a capire come funziona
+    // Vedi in: node_modules/imapflow/lib/search-compiler.js
+    // C'è un problema di base nella notazione Polish dell'Imap, o comunque la libreria imapflow non consente query troppo complicate
+    // Comunque possiamo fare la ricerca anche solo per data e se è stata letta la mail oppure no, non c'è bisogno di farla per destinatario
+
+    // const messagesNumbers = await client.search(searchObj);
     // In realtà client.search può ritornare anche false, se il searchObject non è creato bene (or con almeno un oggetto vuoto)
-    console.log("messages seq numbers:\n", messagesNumbers);
+    // console.log("messages seq numbers:\n", messagesNumbers);
     // Uid search
     const messagesNumbersUids = await client.search(searchObj, { uid: true });
     console.log("messages UIDS:\n", messagesNumbersUids);
@@ -93,7 +93,7 @@ async function main() {
 
     // Logging the fetched messages
     for await (let mess of client.fetch(messagesNumbersUids, fetchQueryObj, { uid: true })) {
-      // console.log("mess:\n", util.inspect(mess, { showHidden: true, depth: null, colors: true }));
+      console.log("mess:\n", util.inspect(mess, { showHidden: true, depth: null, colors: true }));
       // console.log("source:", mess.source.toString()); // -> per vedere la mail con tutti i campi, da Buffer a stringa, non parsata da MailParser però 
       // console.log("---------------------------------");
       const parsedMail: ParsedMail = await simpleParser(mess.source);
