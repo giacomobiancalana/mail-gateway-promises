@@ -60,6 +60,7 @@ async function main() {
       or: [{ from: 'biancalanagiacomo@outlook.it', to: 'dev.service+dev@eagleprojects.it', seen: true, since: '2024-04-01' }, {}]
     };  //TODO: da capire meglio l'or sul SearchObject
     const messagesNumbers = await client.search(searchObj);
+    // In realtà client.search può ritornare anche false, se il searchObject non è creato bene (or con almeno un oggetto vuoto)
     console.log("messages seq numbers:\n", messagesNumbers);
     // Uid search
     const messagesNumbersUids = await client.search(searchObj, { uid: true });
@@ -82,14 +83,14 @@ async function main() {
 
     // Logging the fetched messages
     for await (let mess of client.fetch(messagesNumbersUids, fetchQueryObj, { uid: true })) {
-      console.log("mess:\n", util.inspect(mess, { showHidden: true, depth: null, colors: true }));
+      // console.log("mess:\n", util.inspect(mess, { showHidden: true, depth: null, colors: true }));
       // console.log("source:", mess.source.toString()); // -> per vedere la mail con tutti i campi, da Buffer a stringa, non parsata da MailParser però 
-      console.log("---------------------------------");
+      // console.log("---------------------------------");
       const parsedMail: ParsedMail = await simpleParser(mess.source);
-      const { headerLines, headers, ...parsedMailWithNoHeaders } = parsedMail;
+      const { headerLines, headers, html, ...parsedMailWithNoHeaders } = parsedMail;
+      console.log("#################################");
       console.log("MAIL PARSATA:\n")
       console.log(util.inspect(parsedMailWithNoHeaders, { showHidden: true, depth: null, colors: true }));
-      console.log("#################################");
     }
 
     // const yy: AsyncGenerator<FetchMessageObject, never, void> = client.fetch('1:*', { envelope: true });
