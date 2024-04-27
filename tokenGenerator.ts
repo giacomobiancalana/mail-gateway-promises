@@ -6,6 +6,8 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const TENANT_ID = process.env.TENANT_ID;
 
+//TODO: togliere questo file a favore di token.service.ts
+//TODO: configurazione Docker con Dockerfile, Dockerfile.dev, docker-compose e docker-compose.dev
 export async function getObjWithAccessTokenData() {
   const scope = "https://outlook.office365.com/.default";
   try {
