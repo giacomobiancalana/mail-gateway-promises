@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTokenDto } from './dto/create-token.dto';
-import { UpdateTokenDto } from './dto/update-token.dto';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -15,7 +13,7 @@ export class TokenService {
   async getObjWithAccessTokenData() {
     const scope = "https://outlook.office365.com/.default";
     try {
-      const obj_with_access_token = await axios.request({
+      const objWithAccessToken: AxiosResponse = await axios.request({
         method: "POST",
         url: `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,
         headers: {
@@ -29,31 +27,18 @@ export class TokenService {
         }
       });
   
-      // console.log("obj_with_access_token.data:", obj_with_access_token.data);
-      return await obj_with_access_token.data;
+      // console.log("obj_with_access_token:", objWithAccessToken);
+      // campo data di objWithAccessToken è : {
+      // token_type: 'Bearer',
+      // expires_in: 3599,
+      // ext_expires_in: 3599,
+      // access_token: <string>
+      // }
+
+      return await objWithAccessToken.data;
     } catch (error) {
-      console.log(`Errore nel recuperare l'access token con lo scope ${scope}, ecco l'errore:\n`, error);
-      return null;
+      throw new Error(`Errore nel recuperare l'access token con lo scope ${scope}, ecco l'errore:\n${error}`);
     };
   }
 
-  create(createTokenDto: CreateTokenDto) {
-    return 'This action adds a new token';
-  }
-
-  findAll() {
-    return `This action returns all token`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} token`;
-  }
-
-  update(id: number, updateTokenDto: UpdateTokenDto) {
-    return `This action updates a #${id} token`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} token`;
-  }
 }

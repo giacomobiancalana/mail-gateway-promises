@@ -25,11 +25,12 @@ async function main() {
   const acc = await getObjWithAccessTokenData();
   //TODO: NestJS con Cron job,
   //TODO: poi, access token lo posso mettere come variabile di classe, e lo riprendo ogni volta fino alla scadenza (un'ora)? Come ragiono?
-  if (!acc) {
-    throw new Error('Access token nullo.');
+  const accessToken = acc?.access_token;
+  if (!accessToken) {
+    throw new Error('Access token non è stato inviato.');
   };
 
-  imapFlowOpt.auth.accessToken = acc.access_token;
+  imapFlowOpt.auth.accessToken = accessToken;
 
   // Wait until client connects and authorizes
   console.log("MI PREPARO ALLA CONNESSIONE!!");
