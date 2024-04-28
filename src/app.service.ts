@@ -1,5 +1,6 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { TokenService } from './token/token.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class AppService implements OnApplicationBootstrap {
@@ -11,11 +12,13 @@ export class AppService implements OnApplicationBootstrap {
   async onApplicationBootstrap() {
     this.response = await this.main();
     this.accessToken = this.response["access_token"]
-    console.log(this.accessToken);
+    console.log("ACCESS TOKEN:\n", this.accessToken);
   }
 
+  @Cron(CronExpression.EVERY_5_SECONDS)
   async main() {
     const res = await this.tokenService.getObjWithAccessTokenData();
+    console.log(res);
     return res;
   }
 
