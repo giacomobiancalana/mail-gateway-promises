@@ -15,9 +15,9 @@ export class AppService implements OnApplicationBootstrap {
     console.log("ACCESS TOKEN:\n", this.accessToken);
   }
 
-  @Cron(CronExpression.EVERY_5_SECONDS)
+  @Cron(CronExpression.EVERY_10_SECONDS)
   async main() {
-    const res = await this.tokenService.getObjWithAccessTokenData();
+    const res = await this.tokenService.getTokenDataObj();
     console.log(res);
     return res;
   }

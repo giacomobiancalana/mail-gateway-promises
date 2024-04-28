@@ -31,6 +31,8 @@ export abstract class ENV {
   static readonly from_as_observer: boolean = FROM_TO_CC_AS_OBSERVERS.includes('from');
   static readonly to_as_observer: boolean = FROM_TO_CC_AS_OBSERVERS.includes('to');
   static readonly cc_as_observer: boolean = FROM_TO_CC_AS_OBSERVERS.includes('cc');
+  //TODO: variabile d'ambiente per scegliere se tra effettuare autenticazione con password o con access token (in ognuno dei due
+  // casi, deve essere presente la corrispondente variabile d'ambiente, cioè la password o l'access token)
 }
 console.log(ENV);
 console.log("ROOT PATH: ", rootPath, '\n');

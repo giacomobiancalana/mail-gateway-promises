@@ -10,10 +10,19 @@ const TENANT_ID = process.env.TENANT_ID;
 @Injectable()
 export class TokenService {
 
-  async getObjWithAccessTokenData() {
+  data: object; //Record<string, any>;
+  tsLastAccessToken: number;
+
+  async getTokenDataObj() {
+    //TODO: per TEST -> rendiamo nullo l'accessToken e/o, invece di aspettare un'ora, aggiungiamo secondi a tsLastAccessToken
+    // (o magari aspettiamo comunque un'ora per l'invalidazione del token)
+    if (!!this.data["accessToken"] && Date.now() > this.tsLastAccessToken * 1000) {
+      return this.data;
+    }
+
     const scope = "https://outlook.office365.com/.default";
     try {
-      const objWithAccessToken: AxiosResponse = await axios.request({
+      const res: AxiosResponse = await axios.request({
         method: "POST",
         url: `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,
         headers: {
@@ -26,16 +35,11 @@ export class TokenService {
           grant_type: "client_credentials"
         }
       });
-  
-      // console.log("obj_with_access_token:", objWithAccessToken);
-      // campo data di objWithAccessToken è : {
-      // token_type: 'Bearer',
-      // expires_in: 3599,
-      // ext_expires_in: 3599,
-      // access_token: <string>
-      // }
+      //INFO: tipico campo "data" di res: { token_type: 'Bearer', expires_in: 3599, ext_expires_in: 3599, access_token: <string> }
 
-      return await objWithAccessToken.data;
+      this.data = res.data;
+      this.tsLastAccessToken = Date.now();
+      return res.data;
     } catch (error) {
       throw new Error(`Errore nel recuperare l'access token con lo scope ${scope}, ecco l'errore:\n${error}`);
     };
