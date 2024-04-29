@@ -27,8 +27,12 @@ async function main() {
   // posso nullarlo o no: questo non mi impedisce di cambiare quella variabile da un'altra classe, cioè quella del connect(), ma proprio per questo forse dovrei mettere quella
   // variabile (e relativo timestamp) qui, che è la classe del connect().
 
-  // PROVA QUI: testo validità dell'accessToken cachato con timestamp, se va bene provi connect, e se non va a buon fine nullifichi l'accessToken e timestamp relativo
+  // PROVA QUI: test validità dell'accessToken cachato con timestamp, se va bene provi connect, e se non va a buon fine nullifichi l'accessToken e timestamp relativo
   // (o forse non ce ne è bisogno), e richiami getObjWithAccessTokenData() del token.service.ts per un altro accessToken, e provi con quello, e lo cachi con il suo timestamp.
+
+  // E ANCORA: forse è ancora meglio che si crei un token ogni volta che tento di collegarmi all'account di posta, E però che venga cachato (dopo avvenuta connessione)
+  // l'ultimo token che è stato usato (usato e non creato), in modo che possa sempre essere utile se, ad una nuova connessione (CRON_INTERVAL su env.ts e .env),
+  // il token appena creato, per qualche motivo, non vada bene per il client.connect()
 
   const acc = await getObjWithAccessTokenData();
   //TODO: NestJS con Cron job,
@@ -38,7 +42,7 @@ async function main() {
     throw new Error('Access token non è stato inviato.');
   };
 
-  imapFlowOpt.auth.accessToken = accessToken;
+  imapFlowOpt.auth.accessToken = accessToken;  // DA CAPIRE: posso cambiare proprietà del client così? Tramite un oggetto usato per creare il client? (reference penso)
 
   // Wait until client connects and authorizes
   console.log("MI PREPARO ALLA CONNESSIONE!!");
