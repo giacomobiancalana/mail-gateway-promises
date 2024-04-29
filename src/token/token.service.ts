@@ -18,6 +18,8 @@ export class TokenService {
     // (o magari aspettiamo comunque un'ora per l'invalidazione del token)
     if (!!this.data["accessToken"] && Date.now() > this.tsLastAccessToken * 1000) {
       return this.data;
+      // Giusto che sia così sia per non fare troppe chiamate ad outlook.office365, ma più che altro perchè in un momento in cui questo non sia disponibile/online
+      // e non posso generare un token, almeno posso usare il token precedente, che mi dura per un pò di tempo.
     }
 
     const scope = "https://outlook.office365.com/.default";

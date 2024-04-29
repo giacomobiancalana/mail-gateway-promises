@@ -22,6 +22,14 @@ const client: ImapFlow = new ImapFlow(imapFlowOpt);
 
 /** Funzione principale */
 async function main() {
+  //TODO: credo sia meglio tenere qui le due variabili di classe accessToken e tsLastAccessToken, così controllo queste prima, e semmai richiamo getObjWithAccessTokenData()
+  // -> è con il connect() che sappiamo veramente se quell'accessToken cachato mi permette di connettermi o no (la vera verifica è con quello), quindi di sicuro è qua che
+  // posso nullarlo o no: questo non mi impedisce di cambiare quella variabile da un'altra classe, cioè quella del connect(), ma proprio per questo forse dovrei mettere quella
+  // variabile (e relativo timestamp) qui, che è la classe del connect().
+
+  // PROVA QUI: testo validità dell'accessToken cachato con timestamp, se va bene provi connect, e se non va a buon fine nullifichi l'accessToken e timestamp relativo
+  // (o forse non ce ne è bisogno), e richiami getObjWithAccessTokenData() del token.service.ts per un altro accessToken, e provi con quello, e lo cachi con il suo timestamp.
+
   const acc = await getObjWithAccessTokenData();
   //TODO: NestJS con Cron job,
   //TODO: poi, access token lo posso mettere come variabile di classe, e lo riprendo ogni volta fino alla scadenza (un'ora)? Come ragiono?
