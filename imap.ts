@@ -30,9 +30,22 @@ async function main() {
   // PROVA QUI: test validità dell'accessToken cachato con timestamp, se va bene provi connect, e se non va a buon fine nullifichi l'accessToken e timestamp relativo
   // (o forse non ce ne è bisogno), e richiami getObjWithAccessTokenData() del token.service.ts per un altro accessToken, e provi con quello, e lo cachi con il suo timestamp.
 
-  // E ANCORA: forse è ancora meglio che si crei un token ogni volta che tento di collegarmi all'account di posta, E però che venga cachato (dopo avvenuta connessione)
+  // E ANCORA: forse è ancora meglio che si crei un token ogni volta che tento di collegarmi all'account di posta, e però che venga cachato (dopo avvenuta connessione)
   // l'ultimo token che è stato usato (usato e non creato), in modo che possa sempre essere utile se, ad una nuova connessione (CRON_INTERVAL su env.ts e .env),
   // il token appena creato, per qualche motivo, non vada bene per il client.connect()
+
+  // ########################################################################################################
+  // IDEALE: queue (implementata con array) che tiene in memoria gli ultimi due accessToken
+  // (altri campi come timestamp? magari serve per check validità, ma se tanto li cambio spesso, non arrivo mai alla scadenza, anche
+  // perché se non è valido lo testo con una chiamata, e se non riesco a collegarmi allora creo un altro token -> magari potrei crearmi
+  // il token direttamente se sapessi che è scaduto -> ESAGERAZIONE forse).
+  // Provo sempre il primo cachato per collegarmi: mi collego, analizzo le mail, chiuso la connessione (o cerco di farlo), poi creo il
+  // token alla fine (tempo che trascorre tra la fine dell'istanza del cron job e istanza successiva, così non spreco il tempo dell'istanza
+  // cron job), e questo token lo metto come primo sulla queue. Sarà questo che provo all'istanza cron job successiva, e, se funziona, passa
+  // in seconda posizione (come backup), se invece non funziona allora viene tolto dalla queue e riprovo quello che era rimasto da prima.
+  // Se per caso anche quello non funziona, allora lo creo al momento.
+  // (already running, cosa fai? crei token cmq?)
+  // ########################################################################################################
 
   const acc = await getObjWithAccessTokenData();
   //TODO: NestJS con Cron job,
