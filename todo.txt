@@ -1,0 +1,2 @@
+- I TODO più importanti vanno spostati dal codice a questo file !
+- Serve anche configurazione per accesso a email con sola password (per alcune è possibile, magari account proton?)
